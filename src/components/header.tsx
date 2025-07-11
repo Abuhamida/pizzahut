@@ -57,7 +57,7 @@ export default function header() {
           className="flex items-center justify-center text-[#EE3A43] fugaz font-bold text-2xl gap-2  "
         >
           <Image
-            src="/Logo.svg"
+            src="/logo.svg"
             alt="Logo"
             width={500}
             height={500}
