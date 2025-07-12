@@ -23,3 +23,18 @@
   --font-nunito: "nunito", "sans-serif";
   --font-fredoka: "fredoka", "sans-serif";
 }
+
+
+:root {
+  --swiper-navigation-color: #ffffff;
+  --swiper-pagination-color: #ffffff;
+  --swiper-navigation-size: 10px;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover,
+.swiper-pagination-bullet:hover {
+  color: #EE3A43 !important;
+  transition: color 0.3s ease-in-out;
+}
+
