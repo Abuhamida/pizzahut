@@ -51,7 +51,7 @@ export default function header() {
         (scrolled || pathname!="/") ? "bg-white shadow-md" : "bg-transparent"
       } fixed top-0 left-0 w-full z-50 transition-all duration-300 shadow-lg min-h-10 font-nunito`}
     >
-      <div className="flex items-center justify-between md:justify-center mx-auto px-8 py-4 w-full text-nowrap">
+      <div className="flex items-center justify-between lg:justify-center mx-auto px-8 py-4 w-full text-nowrap">
         <Link
           href={"/"}
           className="flex items-center justify-center text-[#EE3A43] fugaz font-bold text-2xl gap-2  "
@@ -66,7 +66,7 @@ export default function header() {
           <h1 className=" font-fugaze">pizaa hut</h1>
         </Link>
 
-        <div className="hidden md:flex items-center justify-center gap-8 text-black font-semibold text-lg w-full ">
+        <div className="hidden lg:flex items-center justify-center gap-8 text-black font-semibold text-lg w-full ">
           {page.map((item, index) => (
             <Link
               key={index}
@@ -83,7 +83,7 @@ export default function header() {
         </div>
 
         <div className="flex items-center justify-center gap-4 text-black font-semibold text-lg">
-          <button className="hidden  md:flex gap-1 justify-center items-center cursor-pointer font-semibold text-lg">
+          <button className="hidden lg:flex gap-1 justify-center items-center cursor-pointer font-semibold text-lg">
             <FaPhone className="text-2xl bg-[#EE3A43] text-white px-1 rounded-md" />
             Call Support
           </button>
@@ -128,7 +128,7 @@ export default function header() {
           </div>
         </div>
 
-        <div className="md:hidden ">
+        <div className="lg:hidden ">
           <RiMenu3Fill
             className="text-[#EE3A43] text-2xl font-bold"
             onClick={() => setIsOpen(true)}

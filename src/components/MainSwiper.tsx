@@ -24,7 +24,7 @@ export default function MainSwiper() {
       slidesPerView: 1, 
     },
   }}
-  className="w-full max-w-screen h-[200px] sm:h-[250px] md:h-[650px]"
+  className="w-full max-w-screen h-[200px] sm:h-[250px] md:h-[350px] lg:h-[650px]"
 >
 
         {/* <SwiperSlide className="w-full h-full ">

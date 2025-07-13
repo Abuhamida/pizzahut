@@ -4,19 +4,18 @@ import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 export default function Footer() {
-
   const time = new Date();
   const year = time.getFullYear();
 
   return (
-    <div className=" relative   flex flex-col justify-center items-center w-full  px-8 py-4 text-nowrap min-h-56">
+    <div className=" relative   flex flex-col justify-center items-center w-full  px-8 py-5 text-nowrap min-h-56">
       <div className=" absolute -top-10 left-1/2 -translate-x-1/2 z-50 ">
         <Image
           src={"/logo.svg"}
           alt=""
           width={500}
           height={500}
-          className=" object-cover bg-center w-20  bg-white rounded-full p-1 "
+          className=" object-cover bg-center w-24  bg-[#f7fafe] rounded-full p-1 "
         />
       </div>
       <div className=" absolute top-0 left-0 w-full h-full z-[-1] ">
@@ -38,15 +37,12 @@ export default function Footer() {
             {[
               { name: "My Box Range", link: "/my-box-range" },
               { name: "Special Offers", link: "/special-offers" },
-              { name: "For SharingFor One", link: "/for-sharing-for-one" },
-              {
-                name: "Hut FavoritesHut Signatures",
-                link: "/hut-favorites-hut-signatures",
-              },
-              {
-                name: "StartersDrinks and Desserts",
-                link: "/starters-drinks-and-desserts",
-              },
+              { name: "For Sharing", link: "/for-sharing" },
+              { name: "For One", link: "/for-one" },
+              { name: "Hut Favorites", link: "/hut-favorites" },
+              { name: "Hut Signatures", link: "/hut-signatures" },
+              { name: "Starters", link: "/starters" },
+              { name: "Drinks and Desserts", link: "/drinks-and-desserts" },
               { name: "Kids", link: "/kids" },
               { name: "Dips and Seasoning", link: "/dips-and-seasoning" },
               { name: "Build Your Own", link: "/build-your-own" },
