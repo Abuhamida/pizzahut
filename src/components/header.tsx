@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { RiMenu3Fill, RiCloseCircleFill } from "react-icons/ri";
@@ -8,12 +8,30 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { FaPhone } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@/app/store/slices/userSlice";
+import { createClient } from "@/lib/supabase/client";
+import LoginModal from "@/components/AuthModal";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const pathname = usePathname();
-  const [isLogin, setIsLogin] = useState(true);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const dispatch = useDispatch();
+  const supabase = createClient();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut(); // Supabase logout
+    dispatch(clearUser()); // Clear Redux user
+    window.location.href = "/"; // Optional: redirect to home
+  };
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +65,25 @@ export default function Header() {
 
   useEffect(() => {
     setIsOpen(false);
+    setIsProfileOpen(false);
+    setScrolled(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -57,6 +93,7 @@ export default function Header() {
           : "bg-white lg:bg-transparent"
       } fixed top-0 left-0 w-full z-50 transition-all duration-300 shadow-lg min-h-10 font-nunito`}
     >
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
       <div className="flex items-center justify-between lg:justify-center mx-auto px-8 py-4 w-full text-nowrap">
         <Link
           href={"/"}
@@ -89,20 +126,23 @@ export default function Header() {
         </div>
 
         <div className="hidden lg:flex items-center justify-center gap-4 text-black font-semibold text-lg">
+          {/* Support Button */}
           <button className="hidden lg:flex gap-1 justify-center items-center cursor-pointer font-semibold text-lg">
             <FaPhone className="text-2xl bg-[#EE3A43] text-white px-1 rounded-md" />
             Call Support
           </button>
-          <div className="relative ">
-            <CgProfile
-              className={`text-2xl cursor-pointer hover:text-[#EE3A43] transition-colors duration-300 ${
-                isProfileOpen ? "text-[#EE3A43]" : "text-black"
-              }`}
-              onClick={() => setIsProfileOpen((prev) => !prev)}
-            />
 
-            {isProfileOpen &&
-              (isLogin ? (
+          {/* Conditional logic for user */}
+          {user ? (
+            <div className="relative" ref={profileRef}>
+              <CgProfile
+                className={`text-2xl cursor-pointer transition-colors duration-300 hover:text-[#EE3A43] ${
+                  isProfileOpen ? "text-[#EE3A43]" : "text-black"
+                }`}
+                onClick={() => setIsProfileOpen((prev) => !prev)}
+              />
+
+              {isProfileOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -118,22 +158,24 @@ export default function Header() {
                     <li className="py-1 hover:bg-gray-100 cursor-pointer">
                       Orders
                     </li>
-                    <li className="py-1 hover:bg-gray-100 cursor-pointer">
+                    <li
+                      className="py-1 hover:bg-gray-100 cursor-pointer"
+                      onClick={handleLogout}
+                    >
                       Logout
                     </li>
                   </ul>
                 </motion.div>
-              ) : (
-                <div className="absolute top-16 right-8 bg-white shadow-lg rounded-lg p-4 z-50">
-                  <h2 className="text-lg font-semibold">
-                    <Link href={"/login"}>Login</Link>
-                  </h2>
-                  <h2 className="text-lg font-semibold">
-                    <Link href={"/signup"}>Register </Link>
-                  </h2>
-                </div>
-              ))}
-          </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="bg-[#EE3A43] text-white px-4 py-2 rounded-md hover:bg-[#d72f38] transition cursor-pointer"
+            >
+              Login
+            </button>
+          )}
         </div>
 
         <div className="lg:hidden z-50 ">
@@ -176,7 +218,7 @@ export default function Header() {
                   </Link>
                 ))}
               </div>
-              {isLogin ? (
+              {user ? (
                 <motion.div
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -190,9 +232,9 @@ export default function Header() {
                   <Link href={"/orders"} className="text-lg pb-2">
                     Orders
                   </Link>
-                  <Link href={"/logout"} className="text-lg pb-2">
+                  <h2 onClick={handleLogout} className="text-lg pb-2">
                     Logout
-                  </Link>
+                  </h2>
                 </motion.div>
               ) : (
                 <motion.div
@@ -202,12 +244,15 @@ export default function Header() {
                   transition={{ duration: 0.3, delay: page.length * 0.2 }}
                   className="flex flex-col items-start justify-start gap-2 mt-4 font-semibold text-lg px-4 pb-2 w-full border-t border-black/30"
                 >
-                  <Link href={"/login"} className="text-lg">
+                  <button
+                    onClick={() => {
+                      setShowLogin(true);
+                      setIsOpen(false);
+                    }}
+                    className="text-lg  cursor-pointer pt-2"
+                  >
                     Login
-                  </Link>
-                  <Link href={"/signup"} className="text-lg">
-                    Register
-                  </Link>
+                  </button>
                 </motion.div>
               )}
 
