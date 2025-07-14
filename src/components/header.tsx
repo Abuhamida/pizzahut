@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { FaPhone } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
-import { u } from "framer-motion/client";
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
