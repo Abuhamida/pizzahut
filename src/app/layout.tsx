@@ -5,10 +5,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import NavBar from "@/components/NavBar";
 import ReduxProvider from "@/lib/ReduxProvider";
-import AuthProvider from '@/components/AuthProvider'
-
+import AuthProvider from "@/components/AuthProvider";
+import { ToastProvider } from "@/components/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,10 +35,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-[#EE3A43] selection:text-white bg-[#f7fafe]`}
       >
-         <ReduxProvider>
+        <ToastProvider />
+        <ReduxProvider>
           <AuthProvider />
-          <Header />
+          <NavBar />
           {children}
+
           <Footer />
         </ReduxProvider>
       </body>

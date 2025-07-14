@@ -15,7 +15,7 @@ import { clearUser } from "@/app/store/slices/userSlice";
 import { createClient } from "@/lib/supabase/client";
 import LoginModal from "@/components/AuthModal";
 
-export default function Header() {
+export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -129,7 +129,7 @@ export default function Header() {
           {/* Support Button */}
           <button className="hidden lg:flex gap-1 justify-center items-center cursor-pointer font-semibold text-lg">
             <FaPhone className="text-2xl bg-[#EE3A43] text-white px-1 rounded-md" />
-            Call Support
+            <Link href={"/contact"}>Call Support</Link>
           </button>
 
           {/* Conditional logic for user */}
