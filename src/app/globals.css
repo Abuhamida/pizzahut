@@ -11,8 +11,6 @@
   src: url("../assets/fonts/Fredoka-VariableFont_wdth\,wght.ttf");
 }
 
-
-
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: light --default;
@@ -24,7 +22,6 @@
   --font-fredoka: "fredoka", "sans-serif";
 }
 
-
 :root {
   --swiper-navigation-color: #ffffff;
   --swiper-pagination-color: #ffffff;
@@ -34,7 +31,13 @@
 .swiper-button-next:hover,
 .swiper-button-prev:hover,
 .swiper-pagination-bullet:hover {
-  color: #EE3A43 !important;
+  color: #ee3a43 !important;
   transition: color 0.3s ease-in-out;
 }
 
+.swiper-pagination {
+  position: static !important;
+}
+.swiper-pagination-bullet {
+  background: #ee3a43 !important;
+}

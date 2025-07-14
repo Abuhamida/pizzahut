@@ -26,11 +26,11 @@ export default function MenuSwiperMain() {
 
   return (
     <div className="w-full max-w-screen flex flex-col lg:flex-row gap-10 items-center justify-start px-2 lg:px-6 mt-4 bg-[#f7fafe] ">
-      <div className="flex flex-col justify-center items-center gap-5">
-        <h1 className="relative text-nowrap capitalize text-2xl font-nunito font-bold overflow-x-clip inline-block after:content-[''] after:absolute after:bottom-0 after:-mb-1 after:left-0 after:-translate-x-1/2 after:w-[100px] after:h-[3px] after:bg-[#ee3a43]">
+      <div className="flex flex-col justify-center items-start lg:items-center gap-10 w-full lg:w-auto">
+        <h1 className="relative text-nowrap capitalize text-xl font-nunito font-bold overflow-x-clip inline-block after:content-[''] after:absolute after:bottom-0 after:-mb-1 after:left-0 after:-translate-x-1/2 after:w-[100px] after:h-[3px] after:bg-[#ee3a43]">
           Explore Menu
         </h1>
-        <div className="flex w-full justify-between items-center">
+        <div className="lg:flex w-full justify-between items-center hidden">
           <button
             onClick={() => swiperRef.current?.slidePrev()}
             className="text-3xl text-[#ed274b] cursor-pointer hover:scale-95"
