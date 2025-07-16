@@ -153,11 +153,9 @@ export default function NavBar() {
                   <h2 className="text-lg font-semibold">Profile</h2>
                   <ul className="mt-2">
                     <li className="py-1 hover:bg-gray-100 cursor-pointer">
-                      My Account
+                      <Link href={'/profile'}>My Account</Link>
                     </li>
-                    <li className="py-1 hover:bg-gray-100 cursor-pointer">
-                      Orders
-                    </li>
+        
                     <li
                       className="py-1 hover:bg-gray-100 cursor-pointer"
                       onClick={handleLogout}
@@ -228,9 +226,6 @@ export default function NavBar() {
                 >
                   <Link href={"/profile"} className="text-lg pb-2 pt-2">
                     My Account
-                  </Link>
-                  <Link href={"/orders"} className="text-lg pb-2">
-                    Orders
                   </Link>
                   <h2 onClick={handleLogout} className="text-lg pb-2">
                     Logout

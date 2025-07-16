@@ -14,7 +14,6 @@ export default function Footer() {
   const time = new Date();
   const year = time.getFullYear();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  console.log(cartItems.reduce((total, item) => total + item.quantity, 0));
 
   return (
     <div className="  flex flex-col justify-center items-center w-full pb-5 text-nowrap font-nunito   ">

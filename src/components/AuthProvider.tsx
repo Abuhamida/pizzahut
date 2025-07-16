@@ -13,8 +13,6 @@ const AuthProvider = () => {
     const fetchUser = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
 
-      console.log("Fetched user from Supabase:", user);
-
       if (user) {
         dispatch(setUser(user));
       } else {
@@ -25,7 +23,6 @@ const AuthProvider = () => {
     fetchUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", session?.user);
 
 
       if (session?.user) {

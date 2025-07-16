@@ -16,6 +16,7 @@ import categoryReducer from "./slices/categorySlice";
 import userReducer from './slices/userSlice';
 import cartReducer from './slices/cartSlice';
 import menuItemSlice from './slices/menuItemSlice';
+import orderReducer from "./slices/orderSlice";
 
 // 👇 Combine reducers
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   menuItems: menuItemSlice,
   user: userReducer,
   cart: cartReducer,
+  orders: orderReducer,
 });
 
 // 👇 Config for persistence (only persist `cart`)
