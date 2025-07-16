@@ -10,6 +10,7 @@ import ReduxProvider from "@/lib/ReduxProvider";
 import AuthProvider from "@/components/AuthProvider";
 import { ToastProvider } from "@/components/Toast";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

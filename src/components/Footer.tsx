@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,9 +8,13 @@ import { BiFoodMenu } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
 import { BiSolidOffer } from "react-icons/bi";
 import { BsCart3 } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 export default function Footer() {
   const time = new Date();
   const year = time.getFullYear();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  console.log(cartItems.reduce((total, item) => total + item.quantity, 0));
 
   return (
     <div className="  flex flex-col justify-center items-center w-full pb-5 text-nowrap font-nunito   ">
@@ -213,10 +218,27 @@ export default function Footer() {
                       : ""
                   } `}
                 >
-                  {item.icon}
+                  <div className={`${item.link == "/cart" ? "relative" : ""}`}>
+                    {item.icon}
+                    {item.link == "/cart" && cartItems.length > 0 && (
+                    <div className="absolute -top-2 -right-2 bg-[#ee3a43] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartItems.reduce(
+                        (total, item) => total + item.quantity,
+                        0
+                      )}
+                    </div>
+                  )}
+                  </div>
+                  
                 </div>
 
-                <h1 className={`my-auto h-full mx-auto ${item.link=="/offers"?" mt-7":""}`}> {item.name}</h1>
+                <h1
+                  className={`my-auto h-full mx-auto ${
+                    item.link == "/offers" ? " mt-7" : ""
+                  }`}
+                >
+                  {item.name}
+                </h1>
               </div>
             </Link>
           ))}

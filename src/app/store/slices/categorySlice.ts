@@ -22,20 +22,20 @@ const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {
-    fetchStart(state) {
+    fetchCategoriesStart(state) {
       state.loading = true;
       state.error = null;
     },
-    fetchSuccess(state, action: PayloadAction<Category[]>) {
+    fetchCategoriesSuccess(state, action: PayloadAction<Category[]>) {
       state.categories = action.payload;
       state.loading = false;
     },
-    fetchFailure(state, action: PayloadAction<string>) {
+    fetchCategoriesFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchFailure } = categorySlice.actions;
+export const { fetchCategoriesStart, fetchCategoriesSuccess, fetchCategoriesFailure } = categorySlice.actions;
 export default categorySlice.reducer;
