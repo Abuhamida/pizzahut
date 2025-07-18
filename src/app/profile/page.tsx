@@ -272,7 +272,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="flex justify-between items-center pt-3 border-t">
                         <span className="font-bold">
-                          ${order.total.toFixed(2)}
+                          EGP{order.total.toFixed(2)}
                         </span>
                         <a
                           href={`/orders/${order.id}`}

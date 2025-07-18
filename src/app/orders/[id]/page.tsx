@@ -219,7 +219,7 @@ export default function OrderDetailsPage() {
                     </div>
                   </div>
                   <span className="font-medium">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    EGP{(item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -301,7 +301,7 @@ export default function OrderDetailsPage() {
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
                 <span>
-                  $
+                  EGP
                   {order.items
                     .reduce((sum, item) => sum + item.price * item.quantity, 0)
                     .toFixed(2)}
@@ -309,11 +309,11 @@ export default function OrderDetailsPage() {
               </div>
               <div className="flex justify-between mb-2">
                 <span>Delivery Fee</span>
-                <span>$2.99</span>
+                <span>EGP2.99</span>
               </div>
               <div className="flex justify-between font-bold text-lg mt-4">
                 <span>Total</span>
-                <span>${order.total.toFixed(2)}</span>
+                <span>EGP{order.total.toFixed(2)}</span>
               </div>
             </div>
 

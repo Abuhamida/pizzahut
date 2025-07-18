@@ -131,7 +131,7 @@ const CartPage = () => {
                       </button>
                     </div>
                     <p className="text-gray-600 mb-2">
-                      ${item.price.toFixed(2)}
+                     EGP{item.price.toFixed(2)}
                     </p>
                     <div className="flex items-center gap-4 mt-4">
                       <button
@@ -166,22 +166,22 @@ const CartPage = () => {
                     <span>
                       {item.name} × {item.quantity}
                     </span>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>EGP{(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between font-bold mb-4">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>EGP{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 mb-4">
                   <span>Delivery Fee</span>
-                  <span>$2.99</span>
+                  <span>EGP2.99</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold mb-6">
                   <span>Total</span>
-                  <span>${(subtotal + 2.99).toFixed(2)}</span>
+                  <span>EGP{(subtotal + 2.99).toFixed(2)}</span>
                 </div>
                 <button
                   className="w-full bg-[#ee3a43] text-white py-3 rounded-full hover:bg-[#d63333] font-medium"
