@@ -1,11 +1,16 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaStar, FaPlus, FaMinus, FaShoppingCart } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import { addItem, updateQuantity } from "../store/slices/cartSlice";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Swiper as SwiperType } from "swiper"; // import Swiper type
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import {
   fetchCategoriesStart,
   fetchCategoriesSuccess,
@@ -30,7 +35,6 @@ interface MenuItem {
 const MenuPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   // Redux state
   const {
     categories,
@@ -45,6 +49,9 @@ const MenuPage: React.FC = () => {
   } = useSelector((state: RootState) => state.menuItems);
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
 
   // Fetch categories and menu items
   useEffect(() => {
@@ -100,26 +107,69 @@ const MenuPage: React.FC = () => {
     return item ? item.quantity : 0;
   };
 
-  if (categoriesLoading || menuItemsLoading) return <div>Loading...</div>;
-  if (categoriesError || menuItemsError) return <div>Error loading data</div>;
+  const handleSlideChange = (swiper: any) => {
+    setIsBeginning(swiper.isBeginning);
+    setIsEnd(swiper.isEnd);
+  };
 
+  if (categoriesLoading || menuItemsLoading)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+  if (categoriesError || menuItemsError) return <div>Error loading data</div>;
+console.log(isBeginning,isEnd)
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen">
       {/* Category Tabs */}
-      <div className="flex overflow-x-auto gap-2 mb-8 pb-2 scrollbar-hide">
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setActiveCategory(category.id)}
-            className={`px-6 py-2 rounded-full whitespace-nowrap font-medium ${
-              activeCategory === category.id
-                ? "bg-[#ee3a43] text-white"
-                : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            {category.name}
-          </button>
-        ))}
+      <div className="flex w-full gap-5 mb-8 pb-2 justify-center items-center  ">
+        <button
+          className="text-[#ee3a43] text-3xl disabled:text-gray-400 disabled:cursor-not-allowed"
+          onClick={() => swiperRef.current?.slidePrev()}
+          disabled={isBeginning}
+        >
+          <FaArrowAltCircleLeft />
+        </button>
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={10}
+          loop={false}
+          autoplay={false}
+          observer={true}
+          observeParents={true}
+          slidesPerView="auto"
+          onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+          // Set initial states
+          setIsBeginning(swiper.isBeginning);
+          setIsEnd(swiper.isEnd);
+        }}
+        onSlideChange={handleSlideChange}
+          className="w-full h-full"
+        >
+          {categories.map((category) => (
+            <SwiperSlide key={category.id} className="!w-32 cursor-pointer">
+              <button
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-6 py-2 rounded-full whitespace-nowrap font-medium w-32 ${
+                  activeCategory === category.id
+                    ? "bg-[#ee3a43] text-white"
+                    : "bg-gray-100 text-gray-800"
+                }`}
+              >
+                {category.name}
+              </button>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <button
+          className="text-[#ee3a43] text-3xl disabled:text-gray-400 disabled:cursor-not-allowed"
+          onClick={() => swiperRef.current?.slideNext()}
+          disabled={isEnd}
+        >
+          <FaArrowAltCircleRight />
+        </button>
       </div>
 
       {/* Menu Items */}

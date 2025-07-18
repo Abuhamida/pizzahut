@@ -3,9 +3,18 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { FiEdit, FiLogOut, FiClock, FiUser, FiMapPin, FiPhone, FiLock } from "react-icons/fi";
+import {
+  FiEdit,
+  FiLogOut,
+  FiClock,
+  FiUser,
+  FiMapPin,
+  FiPhone,
+  FiLock,
+} from "react-icons/fi";
 import Image from "next/image";
-
+import LoadingSpinner from "@/components/LoadingSpinner";
+import AuthModal from "@/components/AuthModal";
 interface Order {
   id: string;
   created_at: string;
@@ -21,6 +30,7 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("orders");
   const [isEditing, setIsEditing] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [showLogin, setShowLogin] = useState(false);
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -32,7 +42,9 @@ export default function ProfilePage() {
     const fetchData = async () => {
       try {
         // Get user session
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         setUser(user);
 
         if (user) {
@@ -43,8 +55,6 @@ export default function ProfilePage() {
             .eq("id", user?.id)
             .single();
 
-
-
           if (!error && profile) {
             setFormData({
               full_name: profile.full_name || "",
@@ -54,7 +64,6 @@ export default function ProfilePage() {
             });
           }
 
-          // Fetch orders
           const { data: ordersData } = await supabase
             .from("orders")
             .select("*")
@@ -75,7 +84,7 @@ export default function ProfilePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async () => {
@@ -83,15 +92,13 @@ export default function ProfilePage() {
 
     try {
       setLoading(true);
-      const { error } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id,
-          full_name: formData.full_name,
-          phone: formData.phone,
-          address: formData.address,
-          updated_at: new Date().toISOString(),
-        });
+      const { error } = await supabase.from("profiles").upsert({
+        id: user.id,
+        full_name: formData.full_name,
+        phone: formData.phone,
+        address: formData.address,
+        updated_at: new Date().toISOString(),
+      });
 
       if (error) throw error;
       setIsEditing(false);
@@ -108,24 +115,13 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen py-28">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ee3a43]"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold mb-4">Not Authenticated</h2>
-        <p className="mb-6">Please sign in to view your profile</p>
-        <a
-          href="/login"
-          className="bg-[#ee3a43] text-white px-6 py-2 rounded-full hover:bg-[#d63333]"
-        >
-          Sign In
-        </a>
+        {showLogin && <AuthModal onClose={() => setShowLogin(false)} />}
       </div>
     );
   }
@@ -151,28 +147,42 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-              <h2 className="text-xl font-bold">{formData.full_name || user.email}</h2>
+              <h2 className="text-xl font-bold">
+                {formData.full_name || user.email}
+              </h2>
               <p className="text-gray-600">{user.email}</p>
             </div>
 
             <nav className="space-y-2">
               <button
                 onClick={() => setActiveTab("orders")}
-                className={`flex items-center w-full px-4 py-2 rounded-lg ${activeTab === "orders" ? "bg-[#ee3a43] text-white" : "hover:bg-gray-100"}`}
+                className={`flex items-center w-full px-4 py-2 rounded-lg ${
+                  activeTab === "orders"
+                    ? "bg-[#ee3a43] text-white"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 <FiClock className="mr-3" />
                 My Orders
               </button>
               <button
                 onClick={() => setActiveTab("account")}
-                className={`flex items-center w-full px-4 py-2 rounded-lg ${activeTab === "account" ? "bg-[#ee3a43] text-white" : "hover:bg-gray-100"}`}
+                className={`flex items-center w-full px-4 py-2 rounded-lg ${
+                  activeTab === "account"
+                    ? "bg-[#ee3a43] text-white"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 <FiUser className="mr-3" />
                 Account Details
               </button>
               <button
                 onClick={() => setActiveTab("address")}
-                className={`flex items-center w-full px-4 py-2 rounded-lg ${activeTab === "address" ? "bg-[#ee3a43] text-white" : "hover:bg-gray-100"}`}
+                className={`flex items-center w-full px-4 py-2 rounded-lg ${
+                  activeTab === "address"
+                    ? "bg-[#ee3a43] text-white"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 <FiMapPin className="mr-3" />
                 Delivery Address
@@ -210,20 +220,28 @@ export default function ProfilePage() {
               ) : (
                 <div className="space-y-6">
                   {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div
+                      key={order.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex justify-between items-center mb-3">
                         <div>
-                          <h3 className="font-bold">Order #{order.id.slice(0, 8)}</h3>
+                          <h3 className="font-bold">
+                            Order #{order.id.slice(0, 8)}
+                          </h3>
                           <p className="text-sm text-gray-500">
                             {new Date(order.created_at).toLocaleDateString()}
                           </p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-sm ${
-                          order.status === "delivered"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}>
-                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            order.status === "delivered"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {order.status.charAt(0).toUpperCase() +
+                            order.status.slice(1)}
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-4 mb-3">
@@ -253,7 +271,9 @@ export default function ProfilePage() {
                         )}
                       </div>
                       <div className="flex justify-between items-center pt-3 border-t">
-                        <span className="font-bold">${order.total.toFixed(2)}</span>
+                        <span className="font-bold">
+                          ${order.total.toFixed(2)}
+                        </span>
                         <a
                           href={`/orders/${order.id}`}
                           className="text-[#ee3a43] hover:underline text-sm"
@@ -315,7 +335,9 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-600 mb-1">Phone Number</label>
+                  <label className="block text-gray-600 mb-1">
+                    Phone Number
+                  </label>
                   {isEditing ? (
                     <div className="flex items-center">
                       <FiPhone className="text-gray-400 mr-2" />
@@ -355,7 +377,7 @@ export default function ProfilePage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Delivery Address</h2>
-                <button 
+                <button
                   onClick={() => setIsEditing(!isEditing)}
                   className="flex items-center text-[#ee3a43] hover:underline"
                 >

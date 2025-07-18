@@ -13,7 +13,7 @@ import { RootState } from "@/app/store/store";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/app/store/slices/userSlice";
 import { createClient } from "@/lib/supabase/client";
-import LoginModal from "@/components/AuthModal";
+import AuthModal from "@/components/AuthModal";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -93,7 +93,7 @@ export default function NavBar() {
           : "bg-white lg:bg-transparent"
       } fixed top-0 left-0 w-full z-50 transition-all duration-300 shadow-lg min-h-10 font-nunito`}
     >
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showLogin && <AuthModal onClose={() => setShowLogin(false)} />}
       <div className="flex items-center justify-between lg:justify-center mx-auto px-8 py-4 w-full text-nowrap">
         <Link
           href={"/"}

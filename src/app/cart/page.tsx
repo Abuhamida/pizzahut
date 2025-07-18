@@ -1,21 +1,31 @@
 // src/app/cart/page.tsx
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { FaTrash, FaArrowLeft } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/app/store/store";
-import { removeItem, updateQuantity, clearCart } from "@/app/store/slices/cartSlice";
+import { useRouter } from "next/navigation";
+import AuthModal from "@/components/AuthModal";
+import {
+  removeItem,
+  updateQuantity,
+  clearCart,
+} from "@/app/store/slices/cartSlice";
 import Link from "next/link";
 import Image from "next/image";
 
+import { createClient } from "@/lib/supabase/client";
+
 const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const supabase = createClient();
   const { items } = useSelector((state: RootState) => state.cart);
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
+  const router = useRouter();
+  const [showLogin, setShowLogin] = useState(false);
   const handleQuantityChange = (id: string, change: number) => {
     dispatch(updateQuantity({ id, change }));
   };
@@ -28,8 +38,42 @@ const CartPage = () => {
     dispatch(clearCart());
   };
 
+  const handleCheckOrder = async () => {
+    // const {
+    //   data: { user },
+    //   error,
+    // } = await supabase.auth.getUser();
+
+    // if (!user) {
+    //   setShowLogin(true);
+
+    //   return;
+    // }
+
+    // const { error: insertError } = await supabase.from("orders").insert([
+    //   {
+    //     user_id: user.id,
+    //     items: items,
+    //     total: subtotal,
+    //     status: "processing",
+    //     delivery_address: null,
+    //     delivery_instructions: null,
+    //   },
+    // ]);
+
+    // if (insertError) {
+    //   console.error("Error placing order:", insertError.message);
+    //   return;
+    // }
+
+    // // Clear cart after order
+    // dispatch(clearCart());
+    router.push("/checkout");
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen">
+      {showLogin && <AuthModal onClose={() => setShowLogin(false)} />}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Cart Items */}
         <div className="w-full">
@@ -86,7 +130,9 @@ const CartPage = () => {
                         <FaTrash />
                       </button>
                     </div>
-                    <p className="text-gray-600 mb-2">${item.price.toFixed(2)}</p>
+                    <p className="text-gray-600 mb-2">
+                      ${item.price.toFixed(2)}
+                    </p>
                     <div className="flex items-center gap-4 mt-4">
                       <button
                         onClick={() => handleQuantityChange(item.id, -1)}
@@ -137,7 +183,10 @@ const CartPage = () => {
                   <span>Total</span>
                   <span>${(subtotal + 2.99).toFixed(2)}</span>
                 </div>
-                <button className="w-full bg-[#ee3a43] text-white py-3 rounded-full hover:bg-[#d63333] font-medium">
+                <button
+                  className="w-full bg-[#ee3a43] text-white py-3 rounded-full hover:bg-[#d63333] font-medium"
+                  onClick={handleCheckOrder}
+                >
                   Proceed to Checkout
                 </button>
               </div>

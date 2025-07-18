@@ -41,3 +41,28 @@
 .swiper-pagination-bullet {
   background: #ee3a43 !important;
 }
+
+
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  display: block;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  padding: 8px;
+  font-size: 18px;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
