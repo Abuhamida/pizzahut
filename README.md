@@ -84,7 +84,7 @@ src/
 
 ```bash
 # Clone the repository
-$ git clone https://github.com/your-username/pizzahut-menu-app.git
+$ git clone https://github.com/Abuhamida/pizzahut.git
 $ cd pizzahut-menu-app
 
 # Install dependencies
