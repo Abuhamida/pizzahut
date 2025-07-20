@@ -6,21 +6,21 @@ A modern, responsive food menu web app for Pizza Hut built with **Next.js 14 App
 
 ---
 
-![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/home.jpg)
+![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/home.jpg)
 
-![About](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/about.jpg)
+![About](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/about.jpg)
 
-![menu](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/menu.jpg)
+![menu](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/menu.jpg)
 
-![contact](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/contact.jpg)
+![contact](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/contact.jpg)
 
-![cart](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/cart.jpg)
+![cart](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/cart.jpg)
 
-![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/checkout.jpg)
+![checkout](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/checkout.jpg)
 
-![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/profile.jpg)
+![profile](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/profile.jpg)
 
-![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/mobile%20view.png)
+![mobile view](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/public/mobile%20view.png)
 
 ---
 
