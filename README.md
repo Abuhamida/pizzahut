@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍕 Pizza Hut Menu Web App
 
-## Getting Started
+A modern, responsive food menu web app for Pizza Hut built with **Next.js 14 App Router**, **Tailwind CSS**, **Redux Toolkit**, **Supabase**, and **Swiper.js**. Users can browse, search, favorite, and add items to a cart with smooth UI interactions and real-time database integration.
 
-First, run the development server:
+🔗 **Live Website**: [https://pizzahut-kappa.vercel.app/](https://pizzahut-kappa.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/home.jpg)
+
+![About](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/about.jpg)
+
+![menu](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/menu.jpg)
+
+![contact](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/contact.jpg)
+
+![cart](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/cart.jpg)
+
+![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/checkout.jpg)
+
+![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/profile.jpg)
+
+![Home](https://raw.githubusercontent.com/Abuhamida/pizzahut/main/puplic/mobile%20view.png)
+
+---
+
+## 🚀 Features
+
+* 🍽️ Fully categorized food menu (Pizza, Pasta, Drinks, Deals, etc.)
+* ⭐ Favorite items (stored per user in Supabase)
+* 🛒 Add to Cart with quantity controls
+* 🔍 Modal-based Search with real-time filtering
+* 👤 Supabase Auth (Login / Signup)
+* 📊 Global state management using Redux Toolkit
+* 🌟 Beautiful transitions using Swiper.js for best sellers
+* 📲 Fully responsive for all devices
+* ⛓ Error and Not Found pages
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend**: [Next.js 15.3 (App Router)](https://nextjs.org/)
+* **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+* **Database & Auth**: [Supabase](https://supabase.com/)
+* **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/)
+* **Slider**: [Swiper.js](https://swiperjs.com/)
+* **Hosting**: [Vercel](https://vercel.com/)
+
+---
+
+## 🏢 Folder Structure
+
+```
+src/
+├── app/
+│   ├── about/           # About page
+│   ├── api/             # API route handlers
+│   ├── auth/            # Authentication logic (login/signup)
+│   ├── cart/            # Cart page and logic
+│   ├── checkout/        # Checkout component (for future use)
+│   ├── contact/         # Contact page
+│   ├── error/           # Error handling UI
+│   ├── location/        # Branch locator (static page)
+│   ├── menu/            # Main menu with Swiper & filters
+│   ├── orders/          # Order history
+│   ├── private/         # Protected routes logic
+│   ├── profile/         # User profile page
+│   ├── store/           # Redux store setup
+│   ├── layout.tsx       # App layout wrapper
+│   ├── not-found.tsx    # 404 page
+│   └── page.tsx          # Root landing page
+├── assets/                  # Static assets (images/icons)
+├── components/              # Reusable components (Navbar, Cards, etc.)
+├── lib/                      # Utility functions and Supabase client
+├── types/                    # TypeScript interfaces and types
+├── middleware.ts             # Middleware for auth protection
+├── globals.css               # Tailwind global styles
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📅 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Clone the repository
+$ git clone https://github.com/your-username/pizzahut-menu-app.git
+$ cd pizzahut-menu-app
 
-## Learn More
+# Install dependencies
+$ npm install
 
-To learn more about Next.js, take a look at the following resources:
+# Add environment variables
+$ cp .env.example .env.local
+# Fill in Supabase keys and URLs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run the app
+$ npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔐 Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_public_key
+NEXTAUTH_SECRET= any secret ket 
+NEXTAUTH_URL= your url (http://localhost:3000)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📚 Future Enhancements
+
+* 💳 Payment Integration with Stripe
+* ✉️ Email confirmations after order
+* 📖 Multi-language support
+* ♻️ Dark mode toggle
+* 📊 Admin dashboard to manage menu items
+
+---
+
+## 👨‍💼 Author
+
+**Mohamed Ramdan AbuHamida**
+📄 [Portfolio](https://mohamed-abuhamida.vercel.app/)
+💻 [GitHub](https://github.com/Abuhamida)
+💼 [LinkedIn](https://www.linkedin.com/in/mohammed-abuhamida)
+
+---
+
+## 📜 License
+
+This project is open-source and available under the [MIT License](LICENSE).
