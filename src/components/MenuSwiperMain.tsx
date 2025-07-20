@@ -3,31 +3,36 @@ import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
-import Link from "next/link";
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 import { Swiper as SwiperType } from "swiper"; // import Swiper type
+import { setActiveCategory } from "@/app/store/slices/activeCategorySlice";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/app/store/store";
 
 export default function MenuSwiperMain() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const swiperImages = [
-    { image: "/beef.png", name: "My Box Range", link: "#" },
-    { image: "/burger.png", name: "Special Offers", link: "#" },
-    { image: "/pie.png", name: "For Sharing", link: "#" },
-    { image: "/pie.png", name: "For One", link: "#" },
-    { image: "/wings.png", name: "Hut Favorites", link: "#" },
-    { image: "/cheese.png", name: "Hut Signatures", link: "#" },
-    { image: "/beef2.png", name: "Starters", link: "#" },
-    { image: "/salmon.png", name: "Drinks and Desserts", link: "#" },
-    { image: "/beef.png", name: "Kids", link: "#" },
-    { image: "/burger.png", name: "Dips and Seasoning", link: "#" },
-    { image: "/pie.png", name: "Build Your Own", link: "#" },
+  const categories = useSelector(
+    (state: RootState) => state.category.categories
+  );
+
+  const handleCategoryClick = (categoryId: string) => {
+    dispatch(setActiveCategory(categoryId));
+    router.push("/menu");
+  };
+
+  const extendedCategories = [
+    ...categories,
+    { id: "favorites", name: "Favorites",image_url:"/favorite.png" },
   ];
 
   return (
     <div className="w-full max-w-screen flex flex-col lg:flex-row gap-10 items-center justify-start px-2 lg:px-6 mt-4 bg-[#f7fafe] ">
       <div className="flex flex-col justify-center items-start lg:items-center gap-10 w-full lg:w-auto">
-        <h1 className="relative text-nowrap capitalize text-xl font-nunito font-bold overflow-x-clip inline-block after:content-[''] after:absolute after:bottom-0 after:-mb-1 after:left-0 after:-translate-x-1/2 after:w-[100px] after:h-[3px] after:bg-[#ee3a43]">
+        <h1 className="relative text-nowrap capitalize text-3xl font-nunito font-bold overflow-x-clip inline-block after:content-[''] after:absolute after:bottom-0 after:-mb-1 after:left-0 after:w-[100px] after:h-[3px] after:bg-[#ee3a43]">
           Explore Menu
         </h1>
         <div className="lg:flex w-full justify-between items-center hidden">
@@ -59,22 +64,22 @@ export default function MenuSwiperMain() {
           slidesPerView="auto"
           className="w-full h-full"
         >
-          {swiperImages.map((items, index) => (
+          {extendedCategories.map((items, index) => (
             <SwiperSlide key={index} className="!w-44 cursor-pointer">
-              <Link href={items.link}>
-                <div className="relative h-56 w-40 rounded-t-full rounded-b-xl p-4 bg-[#ed274b] flex flex-col justify-center items-center group">
+              <button onClick={() => handleCategoryClick(items.id)}>
+                <div className="relative h-56 w-40 rounded-t-full rounded-b-xl p-4 bg-[#ed274b] flex flex-col justify-center items-center group cursor-pointer overflow-hidden">
                   <Image
-                    src={items.image}
+                    src={(items.image_url ?? "/fallback.png") as string}
                     alt={`Slide ${index + 1}`}
-                    width={1920}
+                    width={600}
                     height={600}
-                    className="w-40 object-fill group-hover:scale-105 transition-transform duration-300"
+                    className="w-32 h-32 object-cover group-hover:scale-105 transition-transform duration-300 rounded-full"
                   />
                   <h1 className="text-white font-bold font-nunito mt-2 text-nowrap group">
                     {items.name}
                   </h1>
                 </div>
-              </Link>
+              </button>
             </SwiperSlide>
           ))}
         </Swiper>

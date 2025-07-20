@@ -13,10 +13,13 @@ import {
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 import categoryReducer from "./slices/categorySlice";
-import userReducer from './slices/userSlice';
-import cartReducer from './slices/cartSlice';
-import menuItemSlice from './slices/menuItemSlice';
+import userReducer from "./slices/userSlice";
+import cartReducer from "./slices/cartSlice";
+import menuItemSlice from "./slices/menuItemSlice";
 import orderReducer from "./slices/orderSlice";
+import activeCategoryReducer from "./slices/activeCategorySlice";
+import favoritesReducer from "./slices/favoritesSlice";
+import searchModalReducer from "./slices/searchModalSlice"; 
 
 // 👇 Combine reducers
 const rootReducer = combineReducers({
@@ -25,18 +28,19 @@ const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
   orders: orderReducer,
+  activeCategory: activeCategoryReducer,
+  favorites: favoritesReducer,
+   searchModal: searchModalReducer, 
 });
 
-// 👇 Config for persistence (only persist `cart`)
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["cart"], // only cart will be persisted
+  whitelist: ["cart", "favorites"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// 👇 Create the store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -51,4 +55,3 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-

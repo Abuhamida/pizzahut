@@ -10,15 +10,73 @@ import { BiSolidOffer } from "react-icons/bi";
 import { BsCart3 } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import { setActiveCategory } from "@/app/store/slices/activeCategorySlice";
+import { addItem, updateQuantity } from "@/app/store/slices/cartSlice";
+import { setOpenSearch } from "@/app/store/slices/searchModalSlice";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { SearchModal } from "./SearchModal";
+import { MenuItem } from "@/types/menuItem";
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  position: number;
+  created_at: string;
+}
+
 export default function Footer() {
   const time = new Date();
   const year = time.getFullYear();
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+  const dispatch = useDispatch();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories/get");
+        const data = await res.json();
+        setCategoriesData(data);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  const pastaCategory = categoriesData.find((item: any) =>
+    item.name.includes("Pasta")
+  );
+  const router = useRouter();
+
+  const handleCategoryClick = (categoryId: string) => {
+    dispatch(setActiveCategory(categoryId));
+    router.push("/menu");
+  };
+  const {
+    items: menuItems,
+    loading: menuItemsLoading,
+    error: menuItemsError,
+  } = useSelector((state: RootState) => state.menuItems);
+
+  const handleAddToCart = (item: MenuItem) => {
+    dispatch(
+      addItem({
+        id: item.id,
+        name: item.name,
+        price: item.base_price,
+        image: item.image_url,
+      })
+    );
+  };
 
   return (
     <div className="  flex flex-col justify-center items-center w-full pb-5 text-nowrap font-nunito   ">
       <div className=" hidden lg:flex flex-col justify-center items-center w-full border-t border-black/30  pt-5 relative">
-        <div className=" absolute -top-12 left-1/2 -translate-x-1/2 z-50 ">
+        <div className=" absolute -top-12 left-1/2 -translate-x-1/2 z-30 ">
           <Image
             src={"/logo.svg"}
             alt=""
@@ -118,8 +176,8 @@ export default function Footer() {
             </h1>
             <div className=" flex flex-col gap-2 mt-4">
               {[
-                { name: "About Us", link: "/about-us" },
-                { name: "Location", link: "/ocation" },
+                { name: "About Us", link: "/about" },
+                { name: "Location", link: "/location" },
               ].map((item, index) => (
                 <Link
                   href={item.link}
@@ -203,12 +261,26 @@ export default function Footer() {
         <div className="flex justify-between w-full items-center">
           {[
             { name: "menu", link: "/menu", icon: <BiFoodMenu /> },
-            { name: "search", link: "/search", icon: <FiSearch /> },
+            { name: "search", link: "/#", icon: <FiSearch /> },
             { name: "offers", link: "/offers", icon: <BiSolidOffer /> },
             { name: "cart", link: "/cart", icon: <BsCart3 /> },
             { name: "pasta", link: "/menu", icon: <BiFoodMenu /> },
           ].map((item, index) => (
-            <Link href={item.link} key={index}>
+            <Link
+              href={item.name === "search" ? "#" : item.link}
+              key={index}
+              onClick={(e) => {
+                if (item.name === "pasta" && pastaCategory) {
+                  handleCategoryClick(pastaCategory.id);
+                }
+                if (item.name === "search") {
+                  e.preventDefault();
+                  dispatch(setOpenSearch(true)); 
+                  router.push("/menu"); 
+                  return;
+                }
+              }}
+            >
               <div className="flex flex-col justify-end items-center gap-1 capitalize ">
                 <div
                   className={`text-2xl ${
@@ -220,15 +292,14 @@ export default function Footer() {
                   <div className={`${item.link == "/cart" ? "relative" : ""}`}>
                     {item.icon}
                     {item.link == "/cart" && cartItems.length > 0 && (
-                    <div className="absolute -top-2 -right-2 bg-[#ee3a43] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartItems.reduce(
-                        (total, item) => total + item.quantity,
-                        0
-                      )}
-                    </div>
-                  )}
+                      <div className="absolute -top-2 -right-2 bg-[#ee3a43] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {cartItems.reduce(
+                          (total, item) => total + item.quantity,
+                          0
+                        )}
+                      </div>
+                    )}
                   </div>
-                  
                 </div>
 
                 <h1

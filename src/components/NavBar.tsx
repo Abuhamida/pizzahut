@@ -259,12 +259,13 @@ export default function NavBar() {
                 className="flex flex-col items-start justify-start gap-2 mt-4 font-semibold text-lg px-4 pb-2 w-full border-t border-black/30"
               >
                 {[
-                  { name: "Feedback", link: "" },
-                  { name: "FAQ", link: "" },
-                  { name: "Terms & Conditions", link: "" },
-                  { name: "Privacy Policy", link: "" },
-                  { name: "Cookie Policy", link: "" },
-                  { name: "Nutrition Information", link: "" },
+                  { name: "Feedback", link: "#" },
+                  { name: "FAQ", link: "#" },
+                  { name: "Terms & Conditions", link: "#" },
+                  { name: "Privacy Policy", link: "#" },
+                  { name: "Cookie Policy", link: "#" },
+                  { name: "Nutrition Information", link: "#" },
+                  { name: "Location", link: "/location" },
                 ].map((item, index) => (
                   <Link
                     key={index}

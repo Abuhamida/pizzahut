@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface Category {
   id: string;
   name: string;
+  image_url: String;
 }
 
 interface CategoryState {

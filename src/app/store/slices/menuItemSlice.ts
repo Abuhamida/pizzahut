@@ -10,6 +10,7 @@ interface MenuItem {
   category_id: string;
   is_available: boolean;
   is_new?: boolean;
+  is_best_seller?: boolean;
 }
 
 interface MenuItemState {

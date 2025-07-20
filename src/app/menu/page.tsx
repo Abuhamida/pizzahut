@@ -2,7 +2,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaStar, FaPlus, FaMinus, FaShoppingCart } from "react-icons/fa";
+import {
+  FaStar,
+  FaPlus,
+  FaMinus,
+  FaShoppingCart,
+  FaSearch,
+} from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,31 +17,24 @@ import { addItem, updateQuantity } from "../store/slices/cartSlice";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Swiper as SwiperType } from "swiper"; // import Swiper type
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
-import {
-  fetchCategoriesStart,
-  fetchCategoriesSuccess,
-  fetchCategoriesFailure,
-} from "../store/slices/categorySlice";
-import {
-  fetchMenuItemsStart,
-  fetchMenuItemsSuccess,
-  fetchMenuItemsFailure,
-} from "../store/slices/menuItemSlice";
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  base_price: number;
-  image_url: string;
-  category_id: string;
-  is_available: boolean;
-}
+import { clearActiveCategory } from "@/app/store/slices/activeCategorySlice";
+import { fetchCategories } from "@/lib/api/fetchCategories";
+import { fetchMenuItems } from "@/lib/api/fetchMenuItems";
+import { RiHeart2Line } from "react-icons/ri";
+import { toggleFavorite } from "@/app/store/slices/favoritesSlice";
+import { setOpenSearch } from "@/app/store/slices/searchModalSlice";
+import { MenuItem } from "@/types/menuItem";
+import { SearchModal } from "@/components/SearchModal";
 
 const MenuPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  // Redux state
+  const favorites = useSelector((state: RootState) => state.favorites.items);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const openSearch = useSelector(
+    (state: RootState) => state.searchModal.openSearch
+  );
+  console.log(openSearch);
   const {
     categories,
     loading: categoriesLoading,
@@ -53,39 +52,39 @@ const MenuPage: React.FC = () => {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
-  // Fetch categories and menu items
+  const storedActiveCategory = useSelector(
+    (state: RootState) => state.activeCategory.id
+  );
+  console.log(storedActiveCategory);
+
+  useEffect(() => {
+    if (openSearch) {
+      setIsSearchOpen(true);
+      dispatch(setOpenSearch(false));
+    }
+  }, [openSearch, dispatch]);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Fetch categories
-        dispatch(fetchCategoriesStart());
-        const categoriesRes = await fetch("/api/categories/get");
-        const categoriesData = await categoriesRes.json();
-        dispatch(fetchCategoriesSuccess(categoriesData));
+      const categoriesData = await fetchCategories(dispatch);
+      await fetchMenuItems(dispatch);
 
-        // Fetch menu items
-        dispatch(fetchMenuItemsStart());
-        const menuRes = await fetch("/api/menu/get");
-        const menuData = await menuRes.json();
-        dispatch(fetchMenuItemsSuccess(menuData));
-
-        // Set initial active category
-        if (categoriesData.length > 0) {
+      if (categoriesData.length > 0) {
+        if (storedActiveCategory) {
+          setActiveCategory(storedActiveCategory);
+        } else {
           setActiveCategory(categoriesData[0].id);
         }
-      } catch (error) {
-        dispatch(fetchCategoriesFailure("Failed to load data"));
-        dispatch(fetchMenuItemsFailure("Failed to load menu items"));
       }
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, storedActiveCategory]);
 
-  // Filter menu items by active category
-  const filteredItems = activeCategory
-    ? menuItems.filter((item) => item.category_id === activeCategory)
-    : [];
+  const filteredItems =
+    activeCategory === "favorites"
+      ? favorites
+      : menuItems.filter((item) => item.category_id === activeCategory);
 
   const handleAddToCart = (item: MenuItem) => {
     dispatch(
@@ -118,11 +117,28 @@ const MenuPage: React.FC = () => {
         <LoadingSpinner />
       </div>
     );
-  if (categoriesError || menuItemsError) return <div>Error loading data</div>;
-console.log(isBeginning,isEnd)
+  if (categoriesError || menuItemsError)
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen">
+        Error loading data
+      </div>
+    );
+
+  const handleToggleFavorite = (item: MenuItem) => {
+    dispatch(toggleFavorite(item));
+  };
+
+  const isFavorited = (id: string) => {
+    return favorites.some((fav) => fav.id === id);
+  };
+
+  const extendedCategories = [
+    ...categories,
+    { id: "favorites", name: "Favorites" },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen">
-      {/* Category Tabs */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 min-h-screen ">
       <div className="flex w-full gap-5 mb-8 pb-2 justify-center items-center  ">
         <button
           className="text-[#ee3a43] text-3xl disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -140,15 +156,14 @@ console.log(isBeginning,isEnd)
           observeParents={true}
           slidesPerView="auto"
           onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-          // Set initial states
-          setIsBeginning(swiper.isBeginning);
-          setIsEnd(swiper.isEnd);
-        }}
-        onSlideChange={handleSlideChange}
+            swiperRef.current = swiper;
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+          }}
+          onSlideChange={handleSlideChange}
           className="w-full h-full"
         >
-          {categories.map((category) => (
+          {extendedCategories.map((category) => (
             <SwiperSlide key={category.id} className="!w-32 cursor-pointer">
               <button
                 onClick={() => setActiveCategory(category.id)}
@@ -170,14 +185,19 @@ console.log(isBeginning,isEnd)
         >
           <FaArrowAltCircleRight />
         </button>
+        <button
+          onClick={() => setIsSearchOpen(true)}
+          className="flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-50 transition-colors"
+        >
+          <FaSearch className="text-gray-500" />
+          <span className="hidden sm:inline text-nowrap">Search Menu</span>
+        </button>
       </div>
-
-      {/* Menu Items */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow relative"
           >
             <div className="relative h-48">
               <Image
@@ -188,10 +208,20 @@ console.log(isBeginning,isEnd)
               />
             </div>
             <div className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-bold">{item.name}</h3>
+              <div className="flex flex-col justify-start gap-3">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-xl font-bold">{item.name}</h3>
+                  <button onClick={() => handleToggleFavorite(item)}>
+                    <RiHeart2Line
+                      size={20}
+                      className={`${
+                        isFavorited(item.id) ? "text-red-500" : "text-gray-500"
+                      } hover:text-red-600 transition-colors`}
+                    />
+                  </button>
+                </div>
                 {item.is_new && (
-                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded absolute top-5">
                     New
                   </span>
                 )}
@@ -234,7 +264,6 @@ console.log(isBeginning,isEnd)
         ))}
       </div>
 
-      {/* Cart Summary Floating Button */}
       {cartItems.length > 0 && (
         <div className="fixed bottom-4 right-4 bg-[#ee3a43] text-white p-3 rounded-full shadow-lg hidden lg:block">
           <Link href={"/cart"}>
@@ -247,6 +276,12 @@ console.log(isBeginning,isEnd)
           </Link>
         </div>
       )}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        menuItems={menuItems}
+        onAddToCart={handleAddToCart}
+      />
     </div>
   );
 };
