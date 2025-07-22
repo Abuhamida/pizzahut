@@ -26,7 +26,8 @@ export const SearchModal = ({
   const filteredItems = menuItems.filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+        false)
   );
 
   // Close modal when clicking outside
@@ -68,7 +69,7 @@ export const SearchModal = ({
   if (!isOpen) return null;
 
   return (
-     <div className="fixed inset-0 z-40 flex justify-center items-start bg-black/30 backdrop-blur-sm px-2 sm:px-4 py-10 sm:py-20">
+    <div className="fixed inset-0 z-40 flex justify-center items-start bg-black/30 backdrop-blur-sm px-2 sm:px-4 py-10 sm:py-20">
       <div
         ref={modalRef}
         className="bg-white rounded-lg w-full max-w-md sm:max-w-2xl max-h-[80vh] overflow-hidden shadow-lg flex flex-col"
@@ -97,7 +98,7 @@ export const SearchModal = ({
         </div>
 
         <div className="overflow-y-auto max-h-[50vh] lg:max-h-[60vh] max-w-sceen">
-          {filteredItems.length > 0 ? ( 
+          {filteredItems.length > 0 ? (
             <ul className="divide-y">
               {filteredItems.map((item) => (
                 <li key={item.id} className="p-4 hover:bg-gray-50">
